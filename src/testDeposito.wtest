@@ -1,0 +1,43 @@
+import bicis.*
+import deposito.*
+import accesorios.*
+
+describe "tests de deposito" {
+	var bicicleta = new Bicicleta(rodado = 28, largo = 150, marca = "Olmo", accesorios = [new Farolito()])
+	
+	var canasto = new Canasto(volumen = 8)
+	var morral = new MorralDeBici(largo = 21, tieneOjoDeGato = true)
+	var morral2 = new MorralDeBici(largo = 6, tieneOjoDeGato = false)
+	
+	var bicicleta2 = new Bicicleta(rodado = 26, largo = 110, marca = "Legnano", accesorios = [new Farolito(), canasto, morral])
+	
+	var bicicleta3 = new Bicicleta(rodado = 20, largo = 90, marca = "Legnano", accesorios = [morral2])
+	
+	var deposito = new Deposito(bicicletas = [bicicleta, bicicleta2, bicicleta3])
+	
+	var bicicleta4 = new Bicicleta(rodado = 20, largo = 95, marca = "Legnano", accesorios = [])
+	
+	test "bicis rapidas" {
+		assert.equals(deposito.bicisRapidas(), [bicicleta, bicicleta2])
+		assert.equals(deposito.marcas(), #{"Legnano", "Olmo"})
+		assert.notThat(deposito.esNocturno())
+		assert.that(deposito.puedeLlevarCarga(10))
+		assert.notThat(deposito.puedeLlevarCarga(50))
+		
+	}
+	test "bici mas rapida" {
+		assert.equals(deposito.marcaBiciMasRapida(), "Olmo")
+	}
+	
+	test "carga total de bicis largas" {
+		assert.equals(deposito.cargaBicisLargas(), 0)
+	}
+	
+	test "cantidad de bicis sin accesorios" {
+		assert.equals(deposito.cantidadBicisSinAccesorios(), 0)
+	}
+	
+	test "bicis compañeras" {
+		assert.equals(deposito.bicisCompanieras(bicicleta4), [bicicleta3])
+	}
+}
